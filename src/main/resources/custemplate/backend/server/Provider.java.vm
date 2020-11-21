@@ -1,0 +1,139 @@
+package ${package}.${appName}.${moduleName}.provider;
+
+import com.alipay.sofa.runtime.api.annotation.SofaService;
+import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
+import com.yiautos.gov.hoox.common.bean.ParamDto;
+import com.yiautos.gov.hoox.common.bean.QueryMap;
+import com.yiautos.gov.hoox.common.bean.ResultDataListDto;
+import com.yiautos.gov.hoox.common.bean.ResultDto;
+import ${package}.${appName}.facade.${moduleName}.I${className}Facade;
+import ${package}.${appName}.dto.${moduleName}.${className}Dto;
+import ${package}.${appName}.${moduleName}.entity.${className}DO;
+import ${package}.${appName}.${moduleName}.service.${className}Service;
+import com.yiautos.gov.hoox.utils.log.ELog;
+import com.yiautos.gov.hoox.utils.log.Log;
+import com.yiautos.gov.hoox.utils.HooxConstants;
+import com.yiautos.gov.hoox.utils.dozer.DozerMapperUtils;
+import com.yiautos.gov.hoox.utils.exception.AppException;
+import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * ${comments}接口实现类
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @Version ${version}
+ */
+@Service
+@Component
+@SofaService(
+        interfaceType = I${className}Facade.class,
+        bindings = {
+                @SofaServiceBinding(bindingType = "bolt", timeout = HooxConstants.SOFA_SERVICE_TIMEOUT),
+                @SofaServiceBinding(bindingType = "rest", timeout = HooxConstants.SOFA_SERVICE_TIMEOUT)
+        }
+)
+public class ${className}FacadeImpl implements I${className}Facade {
+
+    @Autowired
+    ${className}Service ${classname}Service;
+
+    @Override
+    @Log(value = ELog.CREATE, name = "新增${comments}")
+    public ResultDto<${className}Dto> add${className}(ParamDto<${className}Dto> paramDto) throws AppException {
+        ${className}Dto ${classname}Dto = paramDto.getData();
+
+        ResultDto<${className}Dto> result = new ResultDto<${className}Dto>();
+        //校验数据
+        Validate.notNull(${classname}Dto, "${classname}Dto对象为空,保存失败！");
+
+        //DTO转换Bean对象
+        ${className}DO ${classname}DO = new ${className}DO();
+        DozerMapperUtils.getInstance().map(${classname}Dto, ${classname}DO);
+
+        boolean flag = ${classname}Service.add(${classname}DO);
+        ${classname}Dto.set${pk.attrName}(${classname}DO.get${pk.attrName}());
+        result.setFlag(flag);
+        result.setData(${classname}Dto);
+        return result;
+    }
+
+    @Override
+    @Log(value = ELog.UPDATE, name = "更新${comments}")
+    public ResultDto<${className}Dto> update${className}(ParamDto<${className}Dto> paramDto) throws AppException {
+        ${className}Dto ${classname}Dto = paramDto.getData();
+
+        ResultDto result = new ResultDto<${className}Dto>();
+        //校验数据
+        Validate.notNull(${classname}Dto, "${classname}Dto对象为空, 更新失败！");
+
+        //DTO转换Bean对象
+        ${className}DO ${classname}DO = new ${className}DO();
+        DozerMapperUtils.getInstance().map(${classname}Dto, ${classname}DO);
+
+        int affectRows = ${classname}Service.update(${classname}DO);
+        result.setFlag(true);
+        result.setData(${classname}Dto);
+        return result;
+    }
+
+    @Override
+    @Log(value = ELog.DELETE, name = "批量删除${comments}")
+    public ResultDto del${className}(ParamDto<String> paramDto) throws AppException {
+        String ids = paramDto.getData();
+
+        ResultDto result = new ResultDto();
+
+        //校验数据
+        Validate.notNull(ids, "ids不能为空, 批量删除失败！");
+
+        int count = ${classname}Service.delByIds(ids);
+        result.setFlag(true);
+        return result;
+    }
+
+    @Override
+    @Log(value = ELog.READ, name = "查询${comments}")
+    public  ResultDataListDto<List<${className}Dto>>  query${className}List(String expandParam, int currentPageNum, int countPerPage, String sortField, String sortOrder) throws AppException {
+        ResultDataListDto<List<${className}Dto>> result = new ResultDataListDto<>();
+        //1、组装查询条件
+        QueryMap queryMap = new QueryMap(currentPageNum, countPerPage, sortField, sortOrder);
+        //2、请求参数
+        Map<String, Object> requestMap = queryMap.getRequestMap();
+        //3、查询列表
+        List<${className}DO> ${classname}List = ${classname}Service.query(requestMap);
+        //4、统计数量
+        int recordsTotal = ${classname}Service.queryCount(requestMap);
+
+        List<${className}Dto> dtoList = new ArrayList<>();
+        DozerMapperUtils.getInstance().map(${classname}List, dtoList);
+        result.setData(dtoList);
+        result.setRecordsTotal(recordsTotal);
+        result.setFlag(true);
+        return result;
+    }
+
+    @Override
+    @Log(value = ELog.READ, name = "获取${comments}详细信息")
+    public ResultDto<${className}Dto> get${className}(String expandParam, String id) throws AppException {
+        ResultDto<${className}Dto> result = new ResultDto<${className}Dto>();
+        //校验数据
+        Validate.notNull(id, "${comments}标识为空！");
+
+        ${className}DO ${classname}DO = ${classname}Service.getById(id);
+        ${className}Dto dto = new ${className}Dto();
+        DozerMapperUtils.getInstance().map(${classname}DO, dto);
+        result.setFlag(true);
+        result.setData(dto);
+        return result;
+    }
+}
+
+

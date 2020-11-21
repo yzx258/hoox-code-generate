@@ -1,0 +1,211 @@
+package ${package}.${appName}.${moduleName}.controller;
+
+import com.yiautos.gov.hoox.common.bean.QueryMap;
+import com.yiautos.gov.hoox.common.bean.ResultBean;
+import ${package}.${appName}.${moduleName}.object.${className}DO;
+import ${package}.${appName}.dto.${moduleName}.${className}Dto;
+import ${package}.${appName}.${moduleName}.service.${className}Service;
+import com.yiautos.gov.hoox.utils.exception.AppException;
+import com.yiautos.gov.hoox.utils.log.ELog;
+import com.yiautos.gov.hoox.utils.log.Log;
+import com.yiautos.gov.hoox.utils.log.LogUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.BeanUtils;
+import javax.ws.rs.*;
+import java.util.List;
+import java.util.ArrayList;
+
+
+/**
+ * ${comments}管理控制层
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @Version ${version}
+ */
+@RestController
+@RequestMapping("/${restPath}")
+@Path("/${restPath}")
+@Produces("application/json;charset=UTF-8")
+@Tag(name = "${className}Controller", description = "${comments}管理的控制层")
+public class ${className}Controller {
+
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    @Log(value = ELog.CREATE, name = "新增${comments}")
+    @PostMapping("/add")
+    @POST
+    @Path("/add")
+    @Produces("application/json;charset=UTF-8")
+    @Operation(summary = "新增${comments}", description = "新增${comments}")
+    public ResultBean<${className}Dto> add(
+            @Schema(implementation = ${className}Dto.class) @RequestBody ${className}Dto ${classname}Dto) {
+        ResultBean<${className}Dto> result = new ResultBean<${className}Dto>();
+        //校验数据
+        if (null == ${classname}Dto) {
+            result.setFlag(false);
+            result.setErrorMsg("${classname}Dto对象为空,保存失败！");
+            return result;
+        }
+        try {
+            ${className}DO  ${classname}DO =  new ${className}DO();
+            BeanUtils.copyProperties(${classname}Dto, ${classname}DO);
+            boolean flag = ${classname}Service.add(${classname}DO);
+            BeanUtils.copyProperties(${classname}DO, ${classname}Dto);
+            if (flag) {
+                result.setFlag(true);
+                result.setSuccMsg(${classname}Dto);
+            } else {
+                result.setFlag(false);
+                result.setErrorMsg("保存${comments}失败");
+            }
+
+        } catch (Exception e) {
+            result.setFlag(false);
+            result.setErrorMsg(e.getMessage());
+            LogUtil.error("保存${comments}失败", e);
+        }
+
+        return result;
+    }
+
+    @Log(value = ELog.UPDATE, name = "更新${comments}")
+    @PostMapping("/update")
+    @POST
+    @Path("/update")
+    @Produces("application/json;charset=UTF-8")
+    @Operation(summary = "更新${comments}", description = "更新${comments}")
+    public ResultBean<${className}Dto> update(
+            @Schema(implementation = ${className}Dto.class) @RequestBody ${className}Dto ${classname}Dto){
+        ResultBean result = new ResultBean<${className}Dto>();
+        //校验数据
+        if (null == ${classname}Dto) {
+            result.setFlag(false);
+            result.setErrorMsg("${classname}Dto对象为空, 更新失败！");
+            return result;
+        }
+        try {
+            ${className}DO  ${classname}DO =  new ${className}DO();
+            BeanUtils.copyProperties(${classname}Dto, ${classname}DO);
+            int affectRows = ${classname}Service.update(${classname}DO);
+            BeanUtils.copyProperties(${classname}DO, ${classname}Dto);
+            result.setAffectRows(affectRows);
+            result.setFlag(true);
+            result.setSuccMsg(${classname}Dto);
+        } catch (Exception e) {
+            result.setFlag(false);
+            result.setErrorMsg(e.getMessage());
+            LogUtil.error("更新${comments}失败", e);
+        }
+
+        return result;
+    }
+
+
+    @Log(value = ELog.DELETE, name = "批量删除${comments}")
+    @PostMapping("/del/{ids}")
+    @POST
+    @Path("/del/{ids}")
+    @Operation(summary = "批量删除${comments}", description = "批量删除${comments}")
+    public ResultBean del(@Schema(description = "${comments}的ID字符串,其中用“,”分开", minLength = 1) @PathVariable("ids") String ids) {
+        ResultBean result = new ResultBean();
+        //校验数据
+        if (StringUtils.isBlank(ids)) {
+            result.setFlag(false);
+            result.setErrorMsg("ids为空, 批量删除失败！");
+            return result;
+        }
+        String[] arrayIds = ids.split(",");
+        try {
+            int count = 0;
+            for (String id : arrayIds) {
+                count += ${classname}Service.delByIds(id);
+            }
+            result.setAffectRows(count);
+            result.setFlag(true);
+        } catch (Exception e) {
+            result.setFlag(false);
+            result.setErrorMsg(e.getMessage());
+            LogUtil.error("批量删除${comments}失败", e);
+        }
+        return result;
+    }
+
+
+    @Log(value = ELog.READ, name = "查询${comments}")
+    @PostMapping("/query")
+    @POST
+    @Path("/query")
+    @Produces("application/json;charset=UTF-8")
+    @Operation(summary = "通过条件查询${comments}列表", description = "通过条件查询${comments}列表")
+    public ResultBean<List<${className}Dto>> query(@Schema(implementation = QueryMap.class) @RequestBody QueryMap queryMap) {
+        ResultBean<List<${className}Dto>> result = new ResultBean<>();
+        try {
+            List<${className}DO> list = ${classname}Service.query(queryMap.getRequestMap());
+            int count = ${classname}Service.queryCount(queryMap.getRequestMap());
+            result.setSuccMsg(convert${className}Dto(list));
+            result.setRecordsTotal(count);
+            result.setFlag(true);
+        } catch (Exception e) {
+            result.setFlag(false);
+            result.setErrorMsg(e.getMessage());
+            LogUtil.error("查询${comments}失败", e);
+        }
+
+        return result;
+    }
+
+    @Log(value = ELog.READ, name = "获取${comments}详细信息")
+    @GetMapping("/get")
+    @GET
+    @Path("/get")
+    @Operation(summary = "获取${comments}详细信息", description= "获取${comments}详细信息")
+    public ResultBean<${className}Dto> get(@Schema(description = "${comments}ID", minLength = 1, maxLength = 36) @QueryParam(value = "${pk.attrname}")String ${pk.attrname}) {
+        ResultBean<${className}Dto> result = new ResultBean<>();
+        //校验数据
+        if (StringUtils.isBlank(${pk.attrname})) {
+            result.setFlag(false);
+            result.setErrorMsg("${comments}标识为空！");
+            return result;
+        }
+        try {
+            ${className}Dto ${classname}Dto =  new  ${className}Dto();
+            ${className}DO ${classname}DO = ${classname}Service.getById(${pk.attrname});
+            BeanUtils.copyProperties(${classname}DO, ${classname}Dto);
+            result.setFlag(true);
+            result.setSuccMsg(${classname}Dto);
+        } catch (Exception e) {
+            result.setFlag(false);
+            result.setErrorMsg(e.getMessage());
+            LogUtil.error("获取${comments}详细信息失败", e);
+        }
+
+        return result;
+    }
+
+    /**
+     * 复制参数到DTO
+     *
+     * @param ${classname}DOList DO对象列表
+     * @return  DTO对象列表
+     */
+    private List<${className}Dto> convert${className}Dto(List<${className}DO> ${classname}DOList) throws AppException {
+        List<${className}Dto> dtoList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(${classname}DOList)) {
+            for (${className}DO item : ${classname}DOList) {
+                    ${className}Dto dto = new ${className}Dto();
+                BeanUtils.copyProperties(item, dto);
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
+    }
+
+}

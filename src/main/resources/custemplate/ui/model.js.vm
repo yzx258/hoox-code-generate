@@ -1,0 +1,121 @@
+/**
+ * ${comments}页面model层
+ */
+
+import {
+    query,
+    add,
+    update,
+    del
+} from '@/services/${classname}';
+import { message } from 'antd';
+
+/**
+ * 用户页面model层
+ */
+
+export default {
+    // 声明命名空间
+    namespace: '${classname}',
+
+    state: {
+        list: [
+
+        ], // 数据列表
+        pagination: {}, // 分页器数据
+        editorModalSow: false, // modal显示开关
+        modalType: 'add', // modal类型
+        data: null, // 详情数据
+    },
+
+    effects: {
+        *query({ payload }, {call, put }) {
+            const response = yield call(query, payload);
+            let list = []
+            if (response.flag) {
+                list = response.succMsg;
+            }
+            yield put({
+                type: 'queryList',
+                payload: list,
+            });
+        },
+        *add({ payload, callback}, {call, put}) {
+            const response = yield call(add, payload);
+            const {flag} = response;
+            if (flag) {
+                message.success("保存成功");
+                yield put({
+                    type: 'query',
+                });
+                if (callback) callback();
+            } else {
+                message.error("保存失败");
+            }
+        },
+        *del({ payload, callback}, { call, put }) {
+            const response = yield call(del, payload);
+            const {flag} = response;
+            if (flag) {
+                message.success("删除成功");
+                yield put({
+                    type: 'query',
+                });
+                if (callback) callback();
+            } else {
+                message.error("删除失败");
+            }
+        },
+        *update({ payload, callback}, { call, put }) {
+            const response = yield call(update, payload);
+            const {flag} = response;
+            if (flag) {
+                message.success("更新成功");
+                yield put({
+                    type: 'query',
+                });
+                if (callback) callback();
+            } else {
+                message.error("更新失败");
+            }
+        },
+    },
+
+    reducers: {
+        queryList(state, action) {
+            const list = action.payload;
+            const total = list.length;
+            return {
+        ...state,
+                list,
+                pagination: {
+                total
+            }
+        };
+        },
+        // modal开关
+        toggleEditorModal(state, { payload }) {
+            return {
+        ...state,
+                editorModalSow: payload,
+        };
+        },
+        // modal类型变更
+        modalTypeChange(state, { payload }) {
+            return {
+        ...state,
+                modalType: payload,
+        };
+        },
+        // model的值
+        setData(state, { payload }) {
+            return {
+        ...state,
+                data: payload,
+        };
+        },
+    },
+};
+
+
+

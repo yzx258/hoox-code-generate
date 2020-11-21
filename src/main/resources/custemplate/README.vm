@@ -1,0 +1,62 @@
+
+
+**新服务架构中需要在nacos配置文件中对应的数据源加入druid，才会加载底层MybatisPlusAutoConfiguration的包扫描注解**
+*    如果没加druid就无法扫描到Dao，启动会报错。
+*     spring:
+        druid:
+            datasource:
+                master:
+                    url:
+                    username:
+                    password:
+
+**新后端开发规范:**
+
+**xxl-job**
+*    包名:必须以job开头
+*    类名:必须以job结尾
+*    任务名:任务名称必须是 ${类名}.${方法名}
+*    解决netty jar包冲突:
+*      <dependency>
+    <groupId>io.netty</groupId>
+    <artifactId>netty-all</artifactId>
+</dependency>
+
+**DTO,POJO--系统只存在二种元数据转换类**
+*    包名:DTO必须dto结尾,POJO必须已entity结尾
+*    类名:必须大写DTO结尾,必须Entity结尾
+
+**apiclient**
+*    包名:对应模块名称
+*    类名:类名后面必须以ApiClient结尾
+*    逻辑:必须把数据处理后返回给domain使用
+
+**dao,service,Controller**
+*    包名:以dao,service,controller结尾
+*    类名:同上
+*    错误:抛出用Shift.fail(StatusCode,错误信息);
+*    不得直接使用Apis中的接口
+
+**nacos:**
+*    1>统一使用yml
+*    2>要使用动态刷新的方法名称上必须使用@RefreshScope 注解开启
+
+**统一工具类**
+*    1:尽量多少使用libscode中的工具类,后面会统一去掉libs-core中的代码
+*    2:多多找找替代品,比如hutool 4.0.9,ModelMapper dto转换工具的使用,使用默认配置统一走属性名称一致的方式.
+*    3:优先级为hutool工具,如果hutool工具中没有,在另外用其它的.
+*    4:关于hutool的版本,存在争议,目前暂时使用4.0.9,后面等底层包全部升级后会再升级使用最新版本.
+*
+
+**目录结构:**
+* api--------------对外接口模块,包含后端api,定时任务job相关,相关层级通过包隔离比如(web,client,job)等关键字
+* apiclient--------对外服务请求数据.服务之间不信任原则,每个服务间的api请求包都必须再次封装一遍.处理接口请求异常.  方便后续自动化单元测试.
+* base-------------存放通用dto,枚举,常量等相关
+* domain-----------领域模型层
+*    1>ddd模型思维
+*    2>模块拆分为:service,dao,数据库元数据(实体),工具类
+*    3>独立的配置体系比如config  mybatis配置,个性化缓存配置等,集思广益,这个模块里面的东西放出来,供自由发挥.
+* server-client----对外接口提供层,存放对外提供的接口,这里只放接口.接口实现,放到api
+
+**枚举：**
+* 外部调用的头部要加上 @JsonDeserialize(using = EnumDeserializerByCode.class) 否者会转换失败 

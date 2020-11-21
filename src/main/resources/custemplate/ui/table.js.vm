@@ -1,0 +1,89 @@
+import React, { Fragment } from 'react';
+import { Table, Divider, Modal } from 'antd'
+
+const ShTable = ({ dispatch, ${classname}: { list, pagination: { total } }, loading }) => {
+
+    const pageChange = (page, pageSize) => {
+        dispatch({
+            type: '${classname}/query',
+            payload: {
+                currentPage: page,
+                pageSize
+            },
+        })
+    }
+
+    // 弹出编辑modal
+    const showEditorModal = (record) => {
+        //  弹出编辑modal
+        dispatch({
+            type: '${classname}/toggleEditorModal',
+            payload: true,
+        })
+        // 更改编辑modal类型
+        dispatch({
+            type: '${classname}/modalTypeChange',
+            payload: 'editor',
+        })
+
+        // 更改model的值
+        dispatch({
+            type: '${classname}/setData',
+            payload: record,
+        })
+    }
+
+    // 删除提交
+    const deleteSubmit = (id) => {
+        dispatch({
+            type: '${classname}/del',
+            payload: id,
+        })
+    }
+
+    //  删除confirm
+    const handleDelete = id => {
+        Modal.confirm({
+            title: '删除确定',
+            content: '确定删除吗？',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => { deleteSubmit(id) },
+        });
+    };
+
+    const columns = [
+        {
+            title: '名称',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: '操作',
+            key: 'action',
+            render: (text, record) => (
+            <Fragment>
+                <a onClick={() => showEditorModal(record)}>编辑</a>
+                <Divider type="vertical" />
+                <a onClick={() => handleDelete(record.id)}>删除</a>
+            </Fragment>
+        ),
+    }];
+
+    return (
+        <Table
+            columns={columns}
+            dataSource={list}
+            loading={loading}
+            pagination={{
+                total,
+                onChange: pageChange,
+                showSizeChanger: true,
+                showQuickJumper: true
+            }}
+            rowKey={(record) => record.id}
+        />
+    )
+}
+
+export default ShTable;

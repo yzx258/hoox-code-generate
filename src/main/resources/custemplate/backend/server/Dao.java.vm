@@ -1,0 +1,18 @@
+package ${package}.${appName}.${moduleName}.dao;
+
+import com.yiautos.framework.mybatis.base.dao.BaseDao;
+import com.yiautos.framework.mybatis.base.dao.MyBatisDao;
+
+/**
+ * ${comments}dao接口
+ * 
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @description ：${comments}dao接口
+ * @Version ${version}
+ */
+@MyBatisDao
+public interface ${className}Dao extends BaseDao<${className}> {
+	
+	
+}

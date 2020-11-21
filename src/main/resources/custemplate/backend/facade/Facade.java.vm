@@ -1,0 +1,102 @@
+package ${package}.${appName}.facade.${moduleName};
+
+import com.yiautos.gov.hoox.common.bean.ParamDto;
+import com.yiautos.gov.hoox.common.bean.ResultDataListDto;
+import com.yiautos.gov.hoox.common.bean.ResultDto;
+import ${package}.${appName}.dto.${moduleName}.${className}Dto;
+import com.yiautos.gov.hoox.utils.exception.AppException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.ws.rs.*;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * ${comments}接口
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @Version ${version}
+ */
+@Path("/${restPath}")
+@Consumes("application/json;charset=UTF-8")
+@Produces("application/json;charset=UTF-8")
+@Tag(name = "I${className}Facade", description = "${comments}接口")
+public interface I${className}Facade extends Serializable {
+
+    /**
+     * 新增${comments}
+     *
+     * @param paramDto paramDto对象
+     * @return ${classname} ID
+     * @throws AppException 异常
+     */
+    @POST
+    @Path("/${pathName}-add")
+    @Operation(summary = "新增${comments}", description = "新增${comments}")
+    ResultDto<${className}Dto> add${className}(@Schema(implementation = ParamDto.class) ParamDto<${className}Dto> paramDto) throws AppException;
+
+    /**
+     * 更新${comments}
+     *
+     * @param paramDto paramDto对象
+     * @return ${classname} 对象
+     * @throws AppException 异常
+     */
+    @POST
+    @Path("/${pathName}-update")
+    @Operation(summary = "更新${comments}", description = "更新${comments}")
+    ResultDto<${className}Dto> update${className}(@Schema(implementation = ParamDto.class) ParamDto<${className}Dto> paramDto) throws AppException;
+
+    /**
+     * 批量删除${comments}
+     *
+     * @param paramDto paramDto对象（其中data数据存放批量删除id，ids 多组${classname} ID，已“,”进行分割如：“XXXXXXXXX,XXXXXXXXX,XXXXXXXXX”）
+     * @return 影响行数
+     * @throws AppException 异常
+     */
+    @POST
+    @Path("/${pathName}-del")
+    @Operation(summary = "批量删除${comments}", description = "批量删除${comments}")
+    ResultDto del${className}(@Schema(implementation = ParamDto.class) ParamDto<String> paramDto) throws AppException;
+
+    /**
+     * 查询${comments}列表
+     *
+     * @param expandParam   扩展字段，可以存放token、sign、租户等信息的对象json格式
+     * @param currentPageNum    当前页码
+     * @param countPerPage  每页显示条数
+     * @param sortField 排序字段
+     * @param sortOrder 排序顺序
+     * @return ${classname} list列表
+     * @throws AppException 异常
+     */
+    @GET
+    @Path("/${pathName}list-query")
+    @Operation(summary = "通过条件查询${comments}列表", description = "通过条件查询${comments}列表")
+    ResultDataListDto<List<${className}Dto>> query${className}List(
+            @Schema(description = "扩展字段") @QueryParam("expandParam") String expandParam,
+            @Schema(description = "当前页码") @QueryParam("currentPageNum") int currentPageNum,
+            @Schema(description = "每页显示条数") @QueryParam("countPerPage") int countPerPage,
+            @Schema(description = "排序字段") @QueryParam("sortField") String sortField,
+            @Schema(description = "排序顺序") @QueryParam("sortOrder") String sortOrder
+    ) throws AppException;
+
+    /**
+     * 获取${comments}详细
+     *
+     * @param expandParam   扩展字段，可以存放token、sign、租户等信息的对象json格式
+     * @param ${pk.attrname}  ${comments}id
+     * @return ${classname} 对象
+     * @throws AppException 异常
+     */
+    @GET
+    @Path("/${pathName}")
+    @Operation(summary = "获取${comments}详细信息", description= "获取${comments}详细信息")
+    ResultDto<${className}Dto> get${className}(
+            @Schema(description = "扩展字段") @QueryParam("expandParam") String expandParam,
+            @Schema(description = "${comments}ID", minLength = 1, maxLength = 36) @QueryParam("${pk.attrname}") String ${pk.attrname}) throws AppException;
+}
+
+

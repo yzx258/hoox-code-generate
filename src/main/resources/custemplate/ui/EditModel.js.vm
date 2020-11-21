@@ -1,0 +1,116 @@
+import React, { Component } from 'react';
+import { Modal, Form, Input } from 'antd'
+import { checkName, trim } from '@/utils/Validate';
+
+const FormItem = Form.Item;
+
+#set($params=["id", "createId", "createName", "createTime", "modifyId", "modifyName", "modifyTime", "name"])
+
+@Form.create()
+class EditorModal extends Component {
+    state = {
+
+    }
+
+    // 关闭modal
+    closeModal = () => {
+      const { dispatch } = this.props
+      dispatch({
+          type: '${classname}/toggleEditorModal',
+          payload: false
+      })
+    }
+
+    //  新增/编辑 提交
+    handleSubmit = () => {
+        const { form: { validateFields } } = this.props;
+
+        validateFields((err, values) => {
+            if (err) return;
+            this.editorDispatch(values);
+        });
+    };
+
+    // 新增/编辑 dispatch
+    editorDispatch = (values) => {
+        const { dispatch, ${classname}: { modalType, data: {id} } } = this.props;
+
+        if (modalType === 'add') {
+            dispatch({
+                type: '${classname}/add',
+                payload: values,
+                callback: () => {
+                      this.closeModal();
+                  }
+            })
+        } else {
+            dispatch({
+                type: '${classname}/update',
+                payload: {id, ...values},
+                callback: () => {
+                  this.closeModal();
+                }
+            })
+        }
+    }
+
+    validateName = (rule, value, callback) => {
+        if (!value || value.length === 0 || trim(value).length === 0) {
+            callback('请输入名称');
+            return;
+        }
+        if (!checkName(value)) {
+            callback('名称由字母、数字、中文组合的1-30个字符组成');
+            return;
+        }
+        callback();
+    };
+
+    render() {
+      const { form: { getFieldDecorator }, ${classname}: { editorModalSow, modalType, data }, loading } = this.props
+
+      const formLayout = {
+          labelCol: { span: 5 },
+          wrapperCol: { span: 17 },
+      };
+      return (
+          <Modal
+              title={`${ modalType === 'editor' ? '编辑' : '新增'}`}
+              width={800}
+              destroyOnClose
+              visible={editorModalSow}
+              confirmLoading={loading}
+              onOk={this.handleSubmit}
+              onCancel={this.closeModal}
+          >
+              <Form onSubmit={this.handleSubmit}>
+                    <FormItem label="名称" {...formLayout}>
+                      {getFieldDecorator('name', {
+                          rules: [{ validator: this.validateName, required: true }],
+                          initialValue: modalType === 'editor' && data ? data.name : '',
+                      })(<Input maxLength={30} placeholder="请输入名称" />)}
+                    </FormItem>
+
+#foreach($column in $columns)
+#set ($show=false)
+#foreach ($param in $params)
+#if($column.attrname == $param)
+#set ($show=true)
+#end
+#end
+#if($show == false)
+                    <FormItem label="${column.comments}" {...formLayout}>
+                        {getFieldDecorator('${column.attrname}', {
+                            rules: [{ required: true }],
+                            initialValue: modalType === 'editor' && data ? data.${column.attrname} : '',
+                        })(<Input maxLength={30} placeholder="请输入${column.comments}" />)}
+                    </FormItem>
+#end
+#end
+              </Form>
+          </Modal>
+    )
+}
+}
+
+export default EditorModal;

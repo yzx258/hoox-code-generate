@@ -1,0 +1,102 @@
+package ${package}.${appName}.${moduleName}. entity;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.yiautos.framework.mybatis.base.entity.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
+
+/**
+ * ${comments}的实体类
+ *
+ * @author ： ${author}
+ * @description ：${comments}的实体类
+ * @date ： ${datetime}
+ * @Version ：${version}
+ */
+#set($params=["id"])
+@EqualsAndHashCode(callSuper = true)
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Accessors(chain = true)
+@TableName("${tableName}")
+public class ${className} extends BaseEntity<${className}> {
+
+#foreach ($column in $columns)
+
+    #set ($show=false)
+    #foreach ($param in $params)
+        #if($column.attrname == $param)
+            #set ($show=true)
+        #end
+    #end
+
+    #if($show == false)
+
+    #if($column.attrname == "createTime")
+
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    @TableField(fill = FieldFill.INSERT)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private $column.javaType $column.attrname;
+
+    #elseif($column.attrname == "createdBy")
+
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    @TableField(fill = FieldFill.INSERT)
+    private $column.javaType $column.attrname;
+
+    #elseif($column.attrname == "updateTime")
+
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private $column.javaType $column.attrname;
+
+    #elseif($column.attrname == "lastModifiedBy")
+
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private $column.javaType $column.attrname;
+
+    #else
+
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    private $column.javaType $column.attrname;
+    #end
+
+
+#end
+#end
+}

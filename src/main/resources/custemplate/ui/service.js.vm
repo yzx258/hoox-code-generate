@@ -1,0 +1,47 @@
+import request from '@/utils/request';
+import { stringify } from 'qs';
+
+// 查询
+export async function query(params) {
+  return request('/apis/${restPath}/query', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+// 删除
+export async function del(params) {
+  return request(`/apis/${restPath}/del/${ params }`, {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+// 新增
+export async function add(params) {
+  return request('/apis/${restPath}/add', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+// 更新
+export async function update(params) {
+  return request('/apis/${restPath}/update', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+// 获取
+export async function get(params) {
+  return request(`/apis/${restPath}/get/${ stringify(params) }`);
+}

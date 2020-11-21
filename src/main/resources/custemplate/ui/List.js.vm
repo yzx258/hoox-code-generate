@@ -1,0 +1,87 @@
+import React, { PureComponent } from 'react';
+import { connect } from 'dva';
+import { Card, Button } from 'antd';
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import EditorModal from './components/EditorModal'
+import ShTable from './components/ShTable'
+import styles from './${className}List.less';
+
+
+@connect(({ ${classname}, loading }) => ({
+    ${classname},
+    loading: loading.models. ${classname},
+}))
+class  ${className}List extends PureComponent {
+    state = {
+
+    };
+
+    formLayout = {
+        labelCol: { span: 5 },
+        wrapperCol: { span: 17 },
+    };
+
+    doubleFormLayout = {
+        labelCol: { span: 10 },
+        wrapperCol: { span: 10 },
+    };
+
+    componentDidMount() {
+        const { dispatch } = this.props
+        dispatch({
+            type: '${classname}/query',
+        })
+    }
+
+    // 弹出editorModal
+    showEditorModal = () => {
+        const { dispatch } = this.props
+
+        // 弹出编辑modal
+        dispatch({
+            type: '${classname}/toggleEditorModal',
+            payload: true
+        })
+
+        // 更改编辑modal类型
+        dispatch({
+            type: '${classname}/modalTypeChange',
+            payload: 'add',
+        })
+    }
+
+    render() {
+        const titleContent = (
+          <Button
+            type="primary"
+            icon="plus"
+            onClick={this.showEditorModal}
+          >
+            新 增
+          </Button>
+        );
+
+        return (
+          <PageHeaderWrapper>
+            <div className={styles.standardList}>
+              <Card
+                className={styles.listCard}
+                bordered={false}
+                title={titleContent}
+                style={{ marginTop: 24 }}
+                bodyStyle={{ padding: '0 32px 40px 32px' }}
+              >
+                {/* 数据列表组件 */}
+                <ShTable {...this.props} />
+
+              </Card>
+            </div>
+
+            {/* 编辑modal组件 */}
+            <EditorModal {...this.props} />
+          </PageHeaderWrapper>
+        );
+    }
+}
+
+export default ${className}List;

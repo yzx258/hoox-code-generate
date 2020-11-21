@@ -1,0 +1,22 @@
+package ${package}.${appName}.${moduleName}.service;
+
+import com.yiautos.framework.mybatis.base.service.impl.BaseServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+/**
+ * ${comments}业务逻辑接口实现类
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @description ：${comments}业务逻辑接口实现类
+ * @Version ${version}
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ${className}ServiceImpl extends BaseServiceImpl<${className}Dao, ${className}> implements ${className}Service   {
+
+}
+
