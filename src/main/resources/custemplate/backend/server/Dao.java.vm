@@ -1,7 +1,8 @@
 package ${package}.${appName}.${moduleName}.dao;
 
-import com.yiautos.framework.mybatis.base.dao.BaseDao;
-import com.yiautos.framework.mybatis.base.dao.MyBatisDao;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.rbgt.jw.entity.${className};
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * ${comments}dao接口
@@ -11,8 +12,8 @@ import com.yiautos.framework.mybatis.base.dao.MyBatisDao;
  * @description ：${comments}dao接口
  * @Version ${version}
  */
-@MyBatisDao
-public interface ${className}Dao extends BaseDao<${className}> {
+@Mapper
+public interface ${className}Dao extends BaseMapper<${className}> {
 	
 	
 }
