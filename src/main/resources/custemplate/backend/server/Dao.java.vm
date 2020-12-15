@@ -1,12 +1,17 @@
-package ${package}.${appName}.${moduleName}.dao;
+package ${package}.${appName}.${moduleName}. dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rbgt.jw.entity.${className};
+import com.rbgt.jw.service.dto.*;
+import com.rbgt.jw.service.spec.*;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * ${comments}dao接口
- * 
+ *
  * @author ： ${author}
  * @date : ${datetime}
  * @description ：${comments}dao接口
@@ -14,6 +19,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ${className}Dao extends BaseMapper<${className}> {
-	
-	
+
+    /**
+     * 分页查询
+     * @param ${className}
+     * @param page
+     * @return
+     */
+    IPage<${className}> search(@Param("param") ${className}Spec param, Page<${className}> page);
+
 }

@@ -46,7 +46,8 @@ public class GenUtils {
         // templates.add("custemplate/backend/server/Provider.java.vm");
 
         // base
-        //templates.add("custemplate/backend/facade/Dto.java.vm");
+        templates.add("custemplate/backend/server/Dto.java.vm");
+        templates.add("custemplate/backend/server/Spec.java.vm");
         //templates.add("custemplate/backend/facade/Facade.java.vm");
 
         // ui
@@ -351,17 +352,21 @@ public class GenUtils {
             return domainPath + File.separator + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
         }
 
+        // dto对象
+        if (template.contains("Dto.java.vm")) {
+            return domainPath + File.separator + "service" + File.separator + "dto" + File.separator + moduleName + File.separator + className + "DTO.java";
+        }
+
+        // spec对象
+        if (template.contains("Spec.java.vm")) {
+            return domainPath + File.separator + "service" + File.separator + "spec" + File.separator + moduleName
+                    + File.separator + className + "Spec.java";
+        }
+
         // controller对象
        /* if (template.contains("Controller.java.vm")) {
             return apiPath + File.separator + "controller" + File.separator + className + "Controller.java";
         }*/
-
-
-        // dto对象
-        if (template.contains("Dto.java.vm")) {
-            return basePath + File.separator + "dto" + File.separator + moduleName
-                    + File.separator + className + "DTO.java";
-        }
 
        /* // facade对象
         if (template.contains("Facade.java.vm")) {

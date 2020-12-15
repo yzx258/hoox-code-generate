@@ -1,0 +1,34 @@
+package ${package}.${appName}.${moduleName}. spec;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * ${tableName}表的Spec
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @description ：${tableName}表的Spec
+ * @Version ${version}
+ */
+@Data
+public class ${className}Spec {
+
+    @ApiModelProperty("关键字")
+    private String keyword;
+
+    #foreach ($column in $columns)
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    private $column.javaType $column.attrname;
+    #end
+
+    @ApiModelProperty("分页参数")
+    private Page page;
+
+}

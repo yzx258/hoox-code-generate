@@ -1,0 +1,27 @@
+package ${package}.${appName}.${moduleName}. dto;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * ${tableName}表的DTO
+ *
+ * @author ： ${author}
+ * @date : ${datetime}
+ * @description ：${tableName}表的DTO
+ * @Version ${version}
+ */
+@Data
+public class ${className}DTO {
+
+    #foreach ($column in $columns)
+    /**
+     * $column.comments
+     */
+    @ApiModelProperty("$column.comments")
+    private $column.javaType $column.attrname;
+    #end
+
+}

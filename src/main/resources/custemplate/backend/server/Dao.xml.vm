@@ -3,5 +3,15 @@
 
 <mapper namespace="${package}.${appName}.dao.${className}Dao">
 
+    <!-- 分页搜索【模板】 -->
+    <select id="${search}" resultType="${package}.${appName}.${appName2}.${className}">
+        select * from jw_configuration_user jcu
+        <where>
+            <!-- 关键字搜索[模板，需要修改] -->
+            <if  test="param.keyword != null and param.keyword != ''">
+                AND (jcu.name LIKE concat('%', #{param.keyword} , '%') OR jcu.no LIKE concat('%', #{param.keyword} , '%'))
+            </if>
+        </where>
+    </select>
 
 </mapper>
